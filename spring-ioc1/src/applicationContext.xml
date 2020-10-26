@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<!--
+    <bean id="C" class="com.atguigu.pojo.C"/>
+    &lt;!&ndash;depends-on = "B" 如果要创建A，就必须先创建B&ndash;&gt;
+    <bean id="A" class="com.atguigu.pojo.A" depends-on="B"/>
+    <bean id="B" class="com.atguigu.pojo.B"/>
+
+    &lt;!&ndash;
+        scope 属性决定对象的作用域
+        singleton           单例（默认）
+                            1.默认情况下，当Spring 容器对象创建时，容器内所有单例对象也会随之创建
+                            2.多次调用getBean() 方法返回的是同一对象
+
+        prototype           多例
+                            1.当Spring 容器对象创建时，多例对象不随之创建
+                            2.多次调用getBean() 方法都会创建一个新的对象返回
+
+        result              同一请求下，调用多次getBean() 返回的是同一对象
+
+        session             同一会话下，调用多次getBean() 返回的是同一对象
+    &ndash;&gt;
+    <bean class="com.atguigu.pojo.Person" id="p20" scope="singleton"/>
+    <bean class="com.atguigu.pojo.Person" id="p21" scope="prototype"/>
+
+    <bean class="com.atguigu.pojo.Car" id="car2">
+        <property name="name" value="兰博基尼-鬼怪"/>
+    </bean>
+
+    <bean class="com.atguigu.pojo.Car" id="car">
+        <property name="name" value="劳斯莱斯-幻影"/>
+    </bean>
+
+    &lt;!&ndash;
+    autowire 配置自动为子对象赋值
+        no             默认值 ,也就是你不配置,子对象就没值
+
+        byName          是指按子对象的属性名,做为id到Spring容器中查找Bean对象并赋值
+                        1 如果找到就直接赋值
+                        2 如果找不到就null值.
+
+        byType          根据子对象的类型到Spring容器中查找,并赋值
+                        1 找到一个就赋值
+                        2 如果找不到,就null值
+                        3 如果找到多个,就报错
+
+        constructor     按构造器参数进行赋值.
+                        1 先按构造器参数的类型来进行查找并赋值
+                        2 如果找不到,就调用其他构造器
+                        3 如果找到多个,就会再按照参数的名称做为id继续到Spring容器中查找并赋值
+&ndash;&gt;
+    <bean id="p30" class="com.atguigu.pojo.Person" autowire="constructor">
+        <property name="id" value="30"/>
+        <property name="name" value="MrsLiu"/>
+    </bean>-->
+
+    <!--
+    init-method="init" 配置初始化方法名
+        初始化会在对象创建之后自动调用
+    destroy-method="destory" 配置销毁方法 ( 只对单例有效 )
+        当容器对象关闭的时候,也会销毁容器中的对象,对象的销毁方法也会调用
+-->
+    <bean id="p22" class="com.atguigu.pojo.Person" scope="singleton"
+          init-method="init" destroy-method="destroy">
+        <property name="id" value="22" />
+    </bean>
+
+    <!--<bean class="com.atguigu.pojo.MyBeanPostProcessor" />-->
+
+    <!--
+    Spring中有一个context名称空间,它可以用来做很多扫描操作
+其中一个是context:property-placeholder用来扫描加载properties属性配置文件
+
+    location属性就是指定你要加载的properties属性配置文件路径
+        classpath: 表示从类路径下开始查找文件
+        classpath:jdbc.properties 表示从类路径下找jdbc.properteis属性配置文件加载
+-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <bean class="com.alibaba.druid.pool.DruidDataSource" id="dataSource">
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+        <property name="driverClassName" value="${driverClassName}"/>
+        <property name="url" value="${url}"/>
+        <property name="initialSize" value="${initialSize}"/>
+        <property name="maxActive" value="${maxActive}"/>
+    </bean>
+</beans>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.KeyMapper">
+    <resultMap id="resultMap1" type="com.atguigu.pojo.Key">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <!--<result column="lock_id" property="lock.id"/>
+        <result column="lock_name" property="lock.name"/>-->
+        <!--
+        使用association 映射子对象的属性
+            property 设置哪个子对象( 子对象属性名 )
+            javaType 是指定子对象的类型
+-->
+        <association property="lock" javaType="com.atguigu.pojo.Lock">
+            <result column="lock_id" property="id"/>
+            <result column="lock_name" property="name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="resultMap2" type="com.atguigu.pojo.Key">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <association property="lock" column="lock_id"
+                     select="com.atguigu.mapper.LockMapper.queryLockById">
+        </association>
+    </resultMap>
+
+    <select id="queryKeyById" resultMap="resultMap1">
+        select
+            t_key.id as id,
+            t_key.name as name,
+            t_lock.id as lock_id,
+            t_lock.name as lock_name
+        from
+            t_key left join t_lock
+        on
+            t_lock.id = t_key.lock_id
+        where
+            t_key.id = #{id}
+
+    </select>
+
+    <select id="queryKeyByIdForSimple" resultMap="resultMap2">
+        select `id`,`name`,`lock_id` from t_key where id = #{id}
+    </select>
+</mapper>

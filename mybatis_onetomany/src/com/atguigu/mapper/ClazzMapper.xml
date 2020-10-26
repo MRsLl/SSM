@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.ClazzMapper">
+    <resultMap id="resultMap1" type="com.atguigu.pojo.Clazz">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="studentList" ofType="com.atguigu.pojo.Student">
+        <id column="stuId" property="id"/>
+            <result column="stuName" property="name"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="resultMap2" type="com.atguigu.pojo.Clazz">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="studentList" ofType="com.atguigu.pojo.Student"
+                    select="com.atguigu.mapper.StudentMapper.queryStudentByClazzId"
+        column="id"/>
+    </resultMap>
+
+    <resultMap id="resultMap3" type="com.atguigu.pojo.Clazz">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="studentList" ofType="com.atguigu.pojo.Student"
+        select="com.atguigu.mapper.StudentMapper.queryStudentByClazzIdAndLikeName"
+        column="{clazzId=id,name=name}"/>
+    </resultMap>
+
+    <select id="queryClazzById" resultMap="resultMap1">
+        SELECT
+          t_clazz.id `id`,
+          t_clazz.name `name`,
+          t_student.id `stuId`,
+          t_student.name `stuName`,
+          t_student.clazz_id `stuClazzId`
+        FROM
+          t_clazz,t_student
+        WHERE
+          t_clazz.id = t_student.clazz_id
+            AND
+              t_clazz.id=#{id}
+    </select>
+
+
+    <select id="queryClazzByIdInTwoSteps" resultMap="resultMap3">
+        select `id`,`name` from t_clazz where id = #{id};
+    </select>
+</mapper>

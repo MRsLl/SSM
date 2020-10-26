@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!--
+        targetRuntime   可以设置生成的版本
+            MyBatis3            豪华版本
+            MyBatis3Simple      CRUD操作
+    -->
+    <context id="MySqlTables" targetRuntime="MyBatis3">
+
+        <!-- 去掉全部的注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!--
+            修改数据库的四个连接属性
+        -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/ssm"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--
+               javaModelGenerator生成javaBean
+                    targetPackage指定生成的包
+                    targetProject指定生成的项目位置
+        -->
+        <javaModelGenerator targetPackage="com.atguigu.pojo"
+                            targetProject=".\springmvc_spring_mybatis\src">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!--
+            sqlMapGenerator标签是生成mapper.xml配置信息
+                    targetPackage指定生成的包
+                    targetProject指定生成的项目位置
+        -->
+        <sqlMapGenerator targetPackage="com.atguigu.mapper"
+                         targetProject=".\springmvc_spring_mybatis\src">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!--
+            javaClientGenerator生成mapper接口
+                    targetPackage指定生成的包
+                    targetProject指定生成的项目位置
+        -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.atguigu.mapper"
+                             targetProject=".\springmvc_spring_mybatis\src">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!--
+            table标签,一个标签一个数据库表
+                tableName是表名
+                domainObjectName生成的类名
+        -->
+        <table tableName="t_book" domainObjectName="Book" ></table>
+
+    </context>
+</generatorConfiguration>

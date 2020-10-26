@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="jdbc.properties">
+    </properties>
+
+    <typeAliases>
+        <!-- type
+        <typeAlias type="com.atguigu.User" alias="user"></typeAlias>
+        -->
+        <package name="com.atguigu.mybatis.pojo"></package>
+    </typeAliases>
+
+    <!--environments 环境其实就是连接数据库的信息-->
+    <environments default="development">
+        <environment id="development">
+            <!--
+            transactionManager 表示事务管理器
+            type属性指定使用哪个事物管理器
+            JDBC            有事务管理,有提交和有回滚
+            MANAGED         事务交给容器管理,没提交,也回滚
+            -->
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="SQL Server" value="sqlserver" />
+        <property name="MySQL" value="mysql" />
+        <property name="DB2" value="mysql" />
+        <property name="Oracle" value="oracle" />
+    </databaseIdProvider>
+
+    <mappers>
+        <!--<mapper resource="com/atguigu/mybatis/mapper/UserMapper.xml"/>-->
+        <!--<mapper class="com.atguigu.UserMapper"/>-->
+        <package name="com.atguigu.mybatis.mapper"/>
+    </mappers>
+</configuration>

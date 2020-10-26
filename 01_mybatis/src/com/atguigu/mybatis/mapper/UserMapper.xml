@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+mapper 就是映射,    映射mapper接口的方法和sql语句的对应关系
+    namespace名称空间/命名空间
+        必须是Mapper接口全类名
+-->
+<mapper namespace="com.atguigu.mybatis.mapper.UserMapper">
+    <!--    public User queryUserById(Integer id);-->
+    <!--
+        select标签表示配置select查询语句
+            id是唯一标识.一定要跟mapper接口中的方法名一致
+            parameterType 属性表示参数类型( 可选设置,如果是JavaBean,推荐设置 )
+                    parameterType="int"( 可省略 )
+            resultType 属性表示返回值的类型
+
+            #{id} 表示占位符参数 ?
+    -->
+    <select id="queryById" resultType="User">
+    select `id`,`last_name` lastName,`sex` from t_user where id = #{id}
+  </select>
+
+    <!--List<User> queryUsers();-->
+    <select id="queryUsers" resultType="User">
+        select `id`,`last_name` lastName,`sex` from t_user
+    </select>
+    <!--
+    databaseId="mysql" 表示当前配置的sql语句,如果是mysql数据库,就会执行此sql语句
+-->
+    <select id="queryUsers" resultType="user" databaseId="mysql">
+      select `id`,`last_name`,`sex` from t_user where 1 = 1
+    </select>
+    <!--
+        databaseId="oracle" 表示当前配置的sql语句,如果是oracle数据库,就会执行此sql语句
+    -->
+    <select id="queryUsers" resultType="user" databaseId="oracle">
+      select `id`,`last_name`,`sex` from t_user where 2 = 2
+    </select>
+
+
+    <!--int saveUser(User user);
+        useGeneratedKeys="true" 表示使用
+        keyProperty="id"表示将返回的主键id值，注入参数的属性
+    -->
+    <insert id="saveUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        <!--
+                  order属性设置两个语句的执行顺序( selectKey语句的执行顺序 )
+                      BEFORE  先执行selectKey的语句
+                      AFTER   后执行selectKey的语句
+                  keyProperty="id" 是指将返回的主键id值,注入到参数的哪个属性中
+                  resultType="int" 表示返回的是Integer类型
+              -->
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
+            select last_insert_id();
+        </selectKey>
+        insert into t_user(`last_name`,`sex`) values (#{lastName},#{sex})
+    </insert>
+    <!--int updateUser(User user);-->
+    <update id="updateUser" parameterType="User">
+        update t_user set `last_name` = #{lastName},`sex` = #{sex} where id = #{id}
+    </update>
+
+    <!--int deleteUserById(Integer id);-->
+    <delete id="deleteUserById">
+        delete from t_user where id = #{id}
+    </delete>
+    <!--Map<Integer,User> queryUsersForMap();-->
+    <select id="queryUsersForMap" resultType="User">
+        select `id`,`last_name` lastName,`sex` from t_user where last_name = #{name} or sex = #{sex}
+    </select>
+</mapper>

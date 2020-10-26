@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="p1" class="com.atguigu.pojo.Person">
+        <property name="id" value="1"></property>
+        <property name="name" value="张三"></property>
+        <property name="age" value="18"></property>
+        <property name="phone" value="1110"></property>
+    </bean>
+
+    <bean id="p2" class="com.atguigu.pojo.Person">
+        <constructor-arg name="id" value="2"></constructor-arg>
+        <constructor-arg name="name" value="有参构造"></constructor-arg>
+        <constructor-arg name="age" value="18"></constructor-arg>
+        <constructor-arg name="phone" value="120"></constructor-arg>
+    </bean>
+
+    <bean id="p4" class="com.atguigu.pojo.Person">
+        <!--index 表示参数的索引顺序-->
+        <constructor-arg index="0" value="4"></constructor-arg>
+        <constructor-arg index="1" value="参数顺序"></constructor-arg>
+        <constructor-arg index="2" value="120"></constructor-arg>
+        <constructor-arg index="3" value="18"></constructor-arg>
+    </bean>
+
+    <bean id="p5" class="com.atguigu.pojo.Person">
+        <constructor-arg name="id" value="5" type="java.lang.Integer"/>
+        <constructor-arg name="name" value="参数类型" type="java.lang.String"/>
+        <constructor-arg name="phone" value="11000" type="java.lang.String"/>
+        <constructor-arg name="age" value="18" type="java.lang.Integer"/>
+    </bean>
+
+    <bean id="p6" class="com.atguigu.pojo.Person" p:id="6" p:name="p名称空间" p:age="18" p:phone="123"/>
+
+    <bean id="p7" class="com.atguigu.pojo.Person">
+        <property name="id" value="7"/>
+        <property name="name" value="null值测试"/>
+        <property name="phone">
+            <null></null>
+        </property>
+    </bean>
+
+    <bean id="car" class="com.atguigu.pojo.Car">
+        <property name="type" value="布加迪威航"/>
+        <property name="carNo" value="京A00001"/>
+    </bean>
+
+    <bean id="p8" class="com.atguigu.pojo.Person">
+        <property name="id" value="8"/>
+        <property name="name" value="MrsLiu"/>
+        <property name="car" ref="car"/>
+    </bean>
+
+    <bean id="p9" class="com.atguigu.pojo.Person">
+        <property name="id" value="9"/>
+        <property name="name" value="MrsJin"/>
+        <property name="car">
+            <!--内部bean，内部bean只能赋值使用无法通过spring容器直接获得-->
+            <bean id="car2" class="com.atguigu.pojo.Car">
+                <property name="type" value="小绵羊"/>
+                <property name="carNo" value="京B12345"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="p10" class="com.atguigu.pojo.Person">
+        <property name="id" value="10"/>
+        <property name="list">
+            <!--list标签表示给list集合类型属性赋值-->
+            <list>
+                <value>item1</value>
+                <value>item2</value>
+                <value>item3</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="p11" class="com.atguigu.pojo.Person">
+        <property name="id" value="11"/>
+        <property name="map">
+            <!--map 标签表表示赋值类型是map 集合-->
+            <map>
+                <!--entry 表示一个键值对-->
+                <entry key="k1" value="v1"></entry>
+                <entry key="k2" value="v2"></entry>
+                <entry key="k3" value="v3"></entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="p12" class="com.atguigu.pojo.Person">
+        <property name="id" value="11"/>
+        <property name="properties">
+            <props>
+                <prop key="url">jdbc:mysql://localhost:3306/test</prop>
+                <prop key="username">root</prop>
+                <prop key="password">root</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--通过util 命名空间创建集合类型的bean-->
+    <util:map id="map01">
+        <entry key="k1" value="v1"></entry>
+        <entry key="k2" value="v2"></entry>
+        <entry key="k3" value="v3"></entry>
+    </util:map>
+
+    <bean id="p13" class="com.atguigu.pojo.Person">
+        <property name="id" value="13"/>
+        <property name="map" ref="map01"/>
+    </bean>
+
+    <bean id="p14" class="com.atguigu.pojo.Person">
+        <property name="id" value="14"/>
+        <property name="car" ref="car"/>
+        <property name="car.carNo" value="京A666666"/>
+    </bean>
+
+    <!--
+        class属性 + factory-method属性   是静态工厂方法创建Bean对象
+    -->
+    <bean id="p15" class="com.atguigu.factory.PersonFactory" factory-method="create"/>
+
+    <!--配置工厂实例-->
+    <bean class="com.atguigu.factory.PersonFactory" id="personFactory"/>
+
+    <!--factory-bean + factory-method 工厂实例方法创建对象-->
+    <bean id="p16" factory-bean="personFactory" factory-method="create2"/>
+
+    <bean id="p17" class="com.atguigu.factory.PersonFactoryBean"/>
+
+    <!--abstract="true" 属性表示当前配置信息只能用于继承，不能实例化-->
+    <bean id="parent" class="com.atguigu.pojo.Person" abstract="true">
+        <property name="id" value="100"/>
+        <property name="name" value="父类bean配置"/>
+        <property name="age" value="18"/>
+        <property name="phone" value="110"/>
+    </bean>
+
+    <bean id="p18" parent="parent">
+        <property name="name" value="子类person实例"/>
+    </bean>
+</beans>

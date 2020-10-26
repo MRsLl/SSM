@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--
+        context:component-scan 配置包扫描
+        base-package 指定要扫描那个包，及他的子包都会扫描
+    -->
+    <context:component-scan base-package="com" use-default-filters="true">
+        <!--
+        context:exclude-filter 排除过滤
+            type 指定过滤类型
+            expression 过滤的表达式
+        -->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="assignable" expression="com.BookDao"/>-->
+
+<!--        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:include-filter type="assignable" expression="com.BookService"/>-->
+    </context:component-scan>
+</beans>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+mapper 就是映射,    映射mapper接口的方法和sql语句的对应关系
+    namespace名称空间/命名空间
+        必须是Mapper接口全类名
+-->
+<mapper namespace="com.atguigu.mapper.UserMapper">
+    <!--启用二级缓存-->
+    <cache type="com.atguigu.pojo.MySecondCache"/>
+
+    <!--sql 片段-->
+    <sql id="sql01">
+        `id`,`last_name` lastName,`sex`
+    </sql>
+
+    <!--List<User> queryUserBySample(User user);-->
+    <select id="queryUserBySample" parameterType="com.atguigu.pojo.User" resultType="com.atguigu.pojo.User">
+        select
+         <!--include 是包含，引入， refid 是引入哪个sql 片段-->
+          <include refid="sql01"/>
+        from
+           t_user
+        <trim prefix="where" prefixOverrides="or" suffixOverrides="or">
+        <!--<where>-->
+           <if test="lastName != null">
+               last_name like  concat('%',#{lastName},'%')
+               or
+           </if>
+           <if test="sex == 0 || sex == 1">
+                sex = #{sex}
+           </if>
+        <!--</where>-->
+        </trim>
+    </select>
+
+    <!--List<User> queryUserBySampleChoose(User user);-->
+    <select id="queryUserBySampleChoose" parameterType="com.atguigu.pojo.User" resultType="com.atguigu.pojo.User">
+        select
+          `id`,`last_name` lastName,`sex`
+        from
+           t_user
+        <where>
+            <choose>
+                <when test="lastName != null">
+                    last_name like  concat('%',#{lastName},'%')
+                </when>
+
+                <when test="sex==0 || sex==1">
+                    sex = #{sex}
+                </when>
+
+                <otherwise>
+                    id = 6
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <!--int updateUser(User user);-->
+    <update id="updateUser" parameterType="com.atguigu.pojo.User">
+        update
+            t_user
+        <set>
+            <if test="lastName != null">
+                `last_name` = #{lastName}
+            </if>
+            <if test="sex == 0 || sex == 1">
+                ,`sex` = #{sex}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <!--List<User> queryUserByIds(List<Integer> ids);-->
+    <select id="queryUserByIds" resultType="com.atguigu.pojo.User">
+        select
+          `id`,`last_name` lastName,`sex`
+        from
+           t_user
+        where
+            id in
+        <!--
+      foreach标签用来做遍历操作
+         collection  是遍历的数据源( 参数名 )
+         item 当前遍历到的数据
+         separator 两个元素之间的分隔符
+         open="("    遍历开始的内容
+         close=")"   遍历结束的内容
+      -->
+            <foreach collection="ids" separator="," item="id" open="(" close=")">
+              #{id}
+            </foreach>
+
+    </select>
+    <!--int insertUsers(List<User> users);-->
+    <select id="insertUsers" >
+      insert into t_user(`last_name`,`sex`)
+      values
+      <foreach collection="list" item="user" separator=",">
+          (#{user.lastName},#{user.sex})
+      </foreach>
+    </select>
+
+    <!--User queryUserById(Integer id);-->
+    <select id="queryUserById" resultType="com.atguigu.pojo.User" useCache="true">
+        select
+          <include refid="sql01"></include>
+        from
+          t_user
+        where
+          id = #{id}
+    </select>
+
+    <!--int insertUser(User user);-->
+    <insert id="insertUser" parameterType="com.atguigu.pojo.User" flushCache="false">
+        insert into t_user(`last_name`,`sex`)
+        values
+        (#{lastName},#{sex})
+    </insert>
+</mapper>

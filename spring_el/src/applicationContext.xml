@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="car" class="com.atguigu.pojo.Car">
+        <property name="name" value="保时捷" />
+        <property name="pageNo" value="鲁A12345"/>
+    </bean>
+
+    <bean id="springel" class="com.atguigu.pojo.Person">
+        <property name="id" value="#{1}"/>
+        <property name="name" value="#{'MrsLiu'}"/>
+        <property name="car" value="#{car}"/>
+        <!--<property name="phone" value="#{car.pageNo}"/>-->
+        <!--<property name="phone" value="#{car.noStaticFun('实例方法')}"/>-->
+        <property name="phone" value="#{T(com.atguigu.pojo.Car).staticFun('静态方法')}"/>
+    </bean>
+</beans>
